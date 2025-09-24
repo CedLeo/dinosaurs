@@ -1,0 +1,110 @@
+/* Reset + base */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background: linear-gradient(180deg,#08101f 0%, #07111b 100%); color: #f6fbff; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;}
+
+/* Viewport & 3D scene */
+#viewport { perspective: 1600px; width: 100%; height: 100vh; overflow: hidden; position: relative; }
+#scene { width: 100%; height: 100%; transform-style: preserve-3d; will-change: transform; backface-visibility: hidden; position: relative; transition: transform 0.25s cubic-bezier(.2,.8,.2,1); }
+
+/* Background layers */
+.layer.bg { position: absolute; inset: 0; transform-style: preserve-3d; pointer-events: none; }
+.stars {
+  background-image: radial-gradient(rgba(255,255,255,0.85) 0.6px, transparent 0.6px);
+  background-size: 40px 40px;
+  opacity: 0.9;
+  filter: drop-shadow(0 8px 20px rgba(0,0,60,0.25));
+  transform: translateZ(-2400px) scale(1.6);
+}
+.clouds {
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.02) 100%);
+  opacity: 0.25;
+  transform: translateZ(-1600px) scale(1.2);
+}
+.mountains {
+  background-image: linear-gradient(180deg, rgba(8,16,31,0.6), rgba(5,10,20,0.9));
+  transform: translateZ(-1000px) scale(1);
+  opacity: 0.4;
+}
+
+/* Era sections (each dinosaur layer) */
+.era {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform-style: preserve-3d;
+  text-align: center;
+  width: 78%;
+  max-width: 720px;
+  padding: 1.6rem;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+  border-radius: 18px;
+  box-shadow: 0 14px 40px rgba(2,6,20,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+  will-change: transform, opacity;
+  transition: transform 0.45s cubic-bezier(.2,.8,.2,1), opacity 0.35s, filter 0.35s;
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.03);
+  backdrop-filter: blur(6px) saturate(120%);
+  color: #eaf5ff;
+}
+
+/* Card content */
+.card { display: grid; gap: 0.6rem; align-items: center; }
+.era h2 { font-size: 1.75rem; letter-spacing: -0.6px; }
+.era .period { font-size: 0.95rem; color: #a9d1ff; opacity: 0.9; margin-top: -4px; }
+.era .desc { font-size: 1rem; opacity: 0.95; margin-bottom: 0.2rem; }
+.era .mini { font-size: 0.85rem; opacity: 0.7; }
+
+/* Dino images */
+.era img.dino {
+  width: 320px;
+  max-width: 86%;
+  display: block;
+  margin: 0.4rem auto;
+  transform-origin: 50% 50%;
+  will-change: transform;
+  filter: drop-shadow(0 18px 30px rgba(3,8,20,0.6));
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+}
+
+/* Active (currently centered) */
+.era.active {
+  transform: translate(-50%, -50%) translateZ(60px) scale(1.06);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 6px 20px rgba(12, 80, 120, 0.08);
+  border: 1px solid rgba(170,220,255,0.08);
+  z-index: 30;
+  filter: saturate(1.05) drop-shadow(0 28px 40px rgba(0, 90, 140, 0.06));
+}
+
+/* Non-active fade */
+.era:not(.active) { opacity: 0.55; transform: translate(-50%, -50%) translateZ(0) scale(.96); }
+
+/* Modal */
+#modal { position: fixed; inset: 0; display: grid; place-items: center; background: rgba(2,6,20,0.45); opacity: 0; pointer-events: none; transition: opacity 0.25s; z-index: 999; }
+#modal[aria-hidden="false"] { opacity: 1; pointer-events: auto; }
+.modal-card {
+  width: min(720px, 92%);
+  background: linear-gradient(180deg, rgba(10,16,28,0.98), rgba(6,10,18,0.96));
+  border-radius: 14px;
+  padding: 1.6rem 1.4rem;
+  box-shadow: 0 20px 60px rgba(2,8,30,0.7);
+  position: relative;
+  color: #eaf7ff;
+}
+.modal-card h2 { font-size: 1.6rem; margin-bottom: 0.2rem; }
+.modal-card h4 { font-size: 0.95rem; color: #bce3ff; margin-bottom: 0.9rem; }
+.modal-section { margin-bottom: 0.75rem; line-height: 1.5; color: #dff0ff; }
+#modal-close { position: absolute; top: 12px; right: 12px; border: none; background: transparent; color: #9fcfff; font-size: 1.1rem; cursor: pointer; }
+
+/* Footer credit */
+.credit { position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%); font-size: 0.85rem; opacity: 0.75; pointer-events: none; }
+
+/* Accessibility focus */
+.era:focus { outline: 3px solid rgba(130,200,255,0.18); transform: translate(-50%, -50%) translateZ(40px) scale(1.04); }
+
+/* Small screen tweaks */
+@media (max-width: 720px) {
+  .era { width: 92%; padding: 1rem; border-radius: 12px; }
+  .era img.dino { width: 70vmin; }
+  .modal-card { padding: 1rem; }
+}
